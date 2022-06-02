@@ -11,7 +11,7 @@ namespace Hotel.Booking.Form.Tests.Helpers
         public IWebDriver drv = new ChromeDriver();
         public List<int> allBookingIds = new();
         const string url = "http://hotel-test.equalexperts.io/";
-        const string getAllBookingIdsUrl = "http://hotel-test.equalexperts.io/booking";
+        const string getAllBookingIdsUrl = "http://hotel-test.equalexperts.io/booking/";
         public HttpClient httpClient = new();
 
         public void CreateBooking(string firstname, string surname, string price, string deposit, string checkIn, string checkOut)
@@ -35,19 +35,33 @@ namespace Hotel.Booking.Form.Tests.Helpers
             Thread.Sleep(3000);
         }
 
+        public async Task<string> GetSingleBooking(string bookingId)
+        {
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, getAllBookingIdsUrl + bookingId);
+            request.Headers.Add("Accept", "*/*");
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+            var fullBooking = await response.Content.ReadAsStringAsync();
+            JsonDocument parsedFullBooking = JsonDocument.Parse(fullBooking);
+            string firstname = null;
+
+            var singleBookingId = parsedFullBooking.RootElement;
+            firstname = singleBookingId.GetProperty("firstname").ToString();
+
+            return firstname;
+        }
+
         public async Task<int> GetLastBookingId()
         {
             //Retrieve all of the previous bookings
-            var request = new HttpRequestMessage(HttpMethod.Get, getAllBookingIdsUrl);
-            var response = await httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, getAllBookingIdsUrl);
+            HttpResponseMessage response = await httpClient.SendAsync(request);
             var allBookings = await response.Content.ReadAsStringAsync();
-            var convertedAllBookings = JsonDocument.Parse(allBookings);
+            JsonDocument parsedAllBookings = JsonDocument.Parse(allBookings);
 
             //Extract just the bookingIds from the object
-            for (int i = 0; i < convertedAllBookings.RootElement.GetArrayLength(); i++)
+            for (int i = 0; i < parsedAllBookings.RootElement.GetArrayLength(); i++)
             {
-                var singleBookingId = convertedAllBookings.RootElement[i];
+                var singleBookingId = parsedAllBookings.RootElement[i];
                 var bookingId = singleBookingId.GetProperty("bookingid");
                 allBookingIds.Add(int.Parse(bookingId.ToString()));
             }
@@ -72,7 +86,6 @@ namespace Hotel.Booking.Form.Tests.Helpers
             ITakesScreenshot screenshotDriver = drv as ITakesScreenshot;
             Screenshot screenshot = screenshotDriver.GetScreenshot();
             screenshot.SaveAsFile(Directory.GetCurrentDirectory() + "/" + screenshotName);
-            Console.WriteLine(Directory.GetCurrentDirectory());
         }
 
         public void TeardownSession()

@@ -8,11 +8,11 @@ namespace Hotel.Booking.Form.Tests.HotelBookingTests
     {
         
         [Test]
-        public void CreateNewBooking()
+        public async Task CreateNewBooking()
         {
             //Arrange
-            string firstName = "Tester";
-            string surname = "Chester";
+            string firstName = "UniqueName";
+            string surname = "UniqueSurname";
             string price = "50";
             string deposit = "true";
             string checkIn = "/html/body/div[2]/table/tbody/tr[2]/td[3]/a";
@@ -23,7 +23,13 @@ namespace Hotel.Booking.Form.Tests.HotelBookingTests
             CaptureScreenshot("CreateBooking.jpg");
 
             //Assert
-            Assert.Pass();
+            int lastBookingId = await GetLastBookingId();
+            string name = await GetSingleBooking(lastBookingId.ToString());
+
+            if (name.Equals("UniqueName"))
+            {
+                Assert.Pass();
+            }
         }
         [Test]
         public async Task DeleteLatestBooking()
