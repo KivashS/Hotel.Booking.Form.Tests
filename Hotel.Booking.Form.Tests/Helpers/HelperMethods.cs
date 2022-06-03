@@ -37,7 +37,7 @@ namespace Hotel.Booking.Form.Tests.Helpers
 
         public async Task<string> GetSingleBooking(string bookingId)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, getAllBookingIdsUrl + bookingId);
+            HttpRequestMessage request = new(HttpMethod.Get, getAllBookingIdsUrl + bookingId);
             request.Headers.Add("Accept", "*/*");
             HttpResponseMessage response = await httpClient.SendAsync(request);
             var fullBooking = await response.Content.ReadAsStringAsync();
@@ -53,7 +53,7 @@ namespace Hotel.Booking.Form.Tests.Helpers
         public async Task<int> GetLastBookingId()
         {
             //Retrieve all of the previous bookings
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, getAllBookingIdsUrl);
+            HttpRequestMessage request = new(HttpMethod.Get, getAllBookingIdsUrl);
             HttpResponseMessage response = await httpClient.SendAsync(request);
             var allBookings = await response.Content.ReadAsStringAsync();
             JsonDocument parsedAllBookings = JsonDocument.Parse(allBookings);
