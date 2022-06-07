@@ -24,7 +24,7 @@ namespace Hotel.Booking.Form.Tests.Tests
             sauceOptions.Add("username", "");
             sauceOptions.Add("accesskey", "");
             browserOptions.AddAdditionalOption("sauce:options", sauceOptions);
-            var saucelabsurl = new Uri("https://oauth-kivashs-f74c6:29e67a90-0489-4ce7-81f5-f1536b5b0eb1@ondemand.eu-central-1.saucelabs.com:443/wd/hub");
+            var saucelabsurl = new Uri("");
             sauceDrv = new RemoteWebDriver(saucelabsurl, browserOptions);
         }
         [Test]
