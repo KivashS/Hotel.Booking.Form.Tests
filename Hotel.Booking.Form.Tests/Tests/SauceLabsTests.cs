@@ -21,7 +21,7 @@ namespace Hotel.Booking.Form.Tests.Tests
             browserOptions.BrowserVersion = "latest";
             var sauceOptions = new Dictionary<string, object>();
             sauceOptions.Add("name", "Hotel Booking Form Test ");
-            sauceOptions.Add("username", "oauth-kivashs-f74c6");
+            sauceOptions.Add("username", "");
             sauceOptions.Add("accesskey", "29e67a90-0489-4ce7-81f5-f1536b5b0eb1");
             browserOptions.AddAdditionalOption("sauce:options", sauceOptions);
             var saucelabsurl = new Uri("https://oauth-kivashs-f74c6:29e67a90-0489-4ce7-81f5-f1536b5b0eb1@ondemand.eu-central-1.saucelabs.com:443/wd/hub");
